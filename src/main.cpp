@@ -3,7 +3,7 @@
 
 char*               ssid_pfix = (char*)"mqtt_relay_";
 String              user_config_html = ""
-    "<p><input type='text' name='broker' placeholder='InfluxDB Address'>";
+    "<p><input type='text' name='broker' placeholder='MQTT Server'>";
 
 char                mqttServer[100];
  
@@ -17,6 +17,17 @@ WiFiClient wifiClient;
 PubSubClient client(wifiClient);
 void msgCB(char* topic, byte* payload, unsigned int length); // message Callback
 void pubStatus();
+
+
+void loop() {
+    client.loop();
+
+    unsigned long currentMillis = millis();
+    if(currentMillis - lastPublished >= interval) {
+        lastPublished = currentMillis;
+        pubStatus();
+    }
+}
 
 void setup() {
     Serial.begin(115200);
@@ -54,16 +65,6 @@ void setup() {
  
     client.subscribe("id/yourname/relay/cmd");
     digitalWrite(RELAY, LOW);
-}
-
-void loop() {
-    client.loop();
-
-    unsigned long currentMillis = millis();
-    if(currentMillis - lastPublished >= interval) {
-        lastPublished = currentMillis;
-        pubStatus();
-    }
 }
 
 void pubStatus() {
