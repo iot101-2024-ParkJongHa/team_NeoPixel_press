@@ -44,7 +44,7 @@ void setup() {
 
     while (!client.connected()) {
         Serial.println("Connecting to MQTT...");
-        if (client.connect("ESP8266Relay")) {
+        if (client.connect("ESP32Relay")) {
             Serial.println("connected");  
         } else {
             Serial.print("failed with state "); Serial.println(client.state());
